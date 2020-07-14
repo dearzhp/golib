@@ -63,3 +63,30 @@ func PutBuf(buf []byte) {
 		bufPool.Put(buf)
 	}
 }
+
+type Buf struct {
+	size int
+	pool sync.Pool
+}
+
+func NewBuf(size int) *Buf {
+	c := &Buf{}
+	c.size = size
+	return c
+}
+
+func (c *Buf) Get() []byte {
+	x := c.pool.Get()
+	if c == nil {
+		return make([]byte, c.size)
+	}
+	buf := x.([]byte)
+	return buf[:c.size]
+}
+
+func (c *Buf) Put(buf []byte) {
+	if cap(buf) < c.size {
+		return
+	}
+	c.pool.Put(buf)
+}
