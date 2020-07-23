@@ -77,7 +77,7 @@ func NewPool(size int) *Pool {
 
 func (c *Pool) Get() []byte {
 	x := c.pool.Get()
-	if c == nil {
+	if x == nil {
 		return make([]byte, c.size)
 	}
 	buf := x.([]byte)
